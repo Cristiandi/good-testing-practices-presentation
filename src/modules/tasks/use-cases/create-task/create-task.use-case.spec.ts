@@ -1,5 +1,6 @@
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
+import { InternalServerErrorException } from '@nestjs/common';
 
 import { CreateTaskUseCase } from './create-task.use-case';
 
@@ -59,6 +60,24 @@ describe('CreateTaskUseCase', () => {
     if (createdTask) {
       expect(createdTask.title).toBe(createTaskInput.title);
       expect(createdTask.description).toBe(createTaskInput.description);
+    }
+  });
+
+  it('should throw an error if the task could not be created', async () => {
+    const createTaskInput = {
+      title: 'Task 1',
+      description: 'Task 1 description',
+    };
+
+    taskRepository.create = jest.fn().mockResolvedValue(null);
+
+    try {
+      await createTaskUseCase.execute({
+        ...createTaskInput,
+      });
+    } catch (error) {
+      expect(error).toBeDefined();
+      expect(error).toBeInstanceOf(InternalServerErrorException);
     }
   });
 });
