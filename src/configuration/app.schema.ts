@@ -9,4 +9,6 @@ export default Joi.object({
   DB_USER: Joi.required(),
   DB_PASSWORD: Joi.required(),
   DB_NAME: Joi.required(),
+  // FLAGSMITH
+  FLAGSMITH_ENVIRONMENT_KEY: Joi.required(),
 });
