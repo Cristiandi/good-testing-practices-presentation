@@ -10,10 +10,10 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   // getting the port env var
-  const PORT = configService.get<number>('port');
+  const PORT = configService.get<number>('config.port');
 
   // getting the environment var
-  const ENV = configService.get<string>('env');
+  const ENV = configService.get<string>('config.env');
 
   await app.listen(PORT || 3000, () => {
     Logger.log(`app listening at ${PORT} in ${ENV}.`, 'main.ts');

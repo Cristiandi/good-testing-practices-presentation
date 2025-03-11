@@ -22,7 +22,8 @@ import appSchema from './configuration/app.schema';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const databaseConfig = configService.get<DataSourceOptions>('database');
+        const databaseConfig =
+          configService.get<DataSourceOptions>('config.database');
 
         return {
           ...databaseConfig,

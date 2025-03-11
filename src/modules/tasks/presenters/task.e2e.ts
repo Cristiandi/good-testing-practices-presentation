@@ -3,6 +3,8 @@ import * as request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { getApp, closeApp } from '../../../test/setup';
 
+import { FlagsmithService } from '../../../frameworks/flagsmith/flagsmith.service';
+
 describe('AppController (e2e)', () => {
   let app: INestApplication;
 
@@ -95,5 +97,22 @@ describe('AppController (e2e)', () => {
         completed: body.completed,
       }),
     );
+  });
+
+  it('/tasks/:id (DELETE)', async () => {
+    const flagsmithService = app.get(FlagsmithService);
+
+    const isFeatureEnabled = flagsmithService.isFeatureEnabled('enable_delete');
+
+    const response = await request(app.getHttpServer()).delete(
+      `/tasks/${createdTaskId}`,
+    );
+
+    if (!isFeatureEnabled) {
+      expect(response.status).toBe(501);
+      return;
+    }
+
+    expect(response.status).toBe(200);
   });
 });
